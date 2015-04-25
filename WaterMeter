@@ -1,33 +1,35 @@
-#include <wiringPi.h>
-#include <stdio.h>
+#include <wiringPi.h> //библиотека для работы с GPIO. распиновка на 26: https://klenzel.de/wp-content/uploads/2014/09/wiringpi.jpg
+#include <stdio.h> // библиотека для вывода на экран
 
-//#define LedPin    0
-#define ButtonPin 3
+#define ButtonPin 3 // это пин № 15
 
-int main(void)
-{
-	if(wiringPiSetup() == -1){ //when initialize wiring failed,print messageto screen
-		printf("setup wiringPi failed !");
-		return 1; 
+int main(void) //начало программы, зачем void - не знаю
+{					// инициализация wiringPi
+	if(wiringPiSetup() == -1)
+	{ 					//when initialize wiring failed,print messageto screen
+	printf("setup wiringPi failed !");
+	return 1; 
 	}
 
-	pinMode(ButtonPin, INPUT);
+	pinMode(ButtonPin, INPUT); 		//ставим пин 15 на ввод (будет получать землю, т.е., будет выдавать "0")
 
-	pullUpDnControl(ButtonPin, PUD_UP);  //pull up to 3.3V,make GPIO1 a stable level
+	pullUpDnControl(ButtonPin, PUD_UP);  	//подтяжка пина
 
-	int b;
-	int a=357;
+	int b; 					// задаем переменную b, которая будет фиксировать текущее значение пина
+	int a=357; 				//эта переменная задает исходное состояние счетчика (литры)
 
-	while(1){
-//		digitalWrite(LedPin, HIGH);
-		if(digitalRead(ButtonPin) != b){ //indicate that button has pressed down
-		b=digitalRead(ButtonPin);
-		a+=5;
-		printf("%d\n", a);
+	while(1) 				//начало цикла
+	{
+		if(digitalRead(ButtonPin) != b) //Если состояние пина не равно переменной b, то выполняется условие:
+			{ 				//начало условия
+			b=digitalRead(ButtonPin);	// меняем значение переменной b на текущее состояние пина (0 или 1)
+			a+=5; 				//прибавляем к переменной а 5 литров
+			printf("%d\n", a); 		//выводим значение переменной а
+			} 				//конец условия
 		
-		}
-	delay(1000);
-	}
+	delay(1000); 					//задержка в 1 секунду. Говорят, что за секунду 3-4 литра не выльется
+	
+	} 						//конец цикла
 
-	return 0;
-}
+	return 0; 					//конец программы (типа того)
+} 							//конец main
