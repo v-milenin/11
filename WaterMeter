@@ -1,0 +1,33 @@
+#include <wiringPi.h>
+#include <stdio.h>
+
+//#define LedPin    0
+#define ButtonPin 3
+
+int main(void)
+{
+	if(wiringPiSetup() == -1){ //when initialize wiring failed,print messageto screen
+		printf("setup wiringPi failed !");
+		return 1; 
+	}
+
+	pinMode(ButtonPin, INPUT);
+
+	pullUpDnControl(ButtonPin, PUD_UP);  //pull up to 3.3V,make GPIO1 a stable level
+
+	int b;
+	int a=357;
+
+	while(1){
+//		digitalWrite(LedPin, HIGH);
+		if(digitalRead(ButtonPin) != b){ //indicate that button has pressed down
+		b=digitalRead(ButtonPin);
+		a+=5;
+		printf("%d\n", a);
+		
+		}
+	delay(1000);
+	}
+
+	return 0;
+}
