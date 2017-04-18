@@ -1,0 +1,41 @@
+#include <wiringPi.h> //библиотека для работы с GPIO. распиновка на 26: https://klenzel.de/wp-content/uploads/2014/09/wiringpi.jpg
+#include <stdio.h> // библиотека для вывода на экран
+#include <my_global.h>
+#include <mysql.h>
+
+#define ButtonPin 3 // это пин № 15
+
+void finish_with_error(MYSQL *con)
+        {
+                fprintf(stderr, "%s\n", mysql_error(con));
+                mysql_close(con);
+                exit(1);
+        }
+
+int main(int argc, char **argv) //начало программы, зачем void - не знаю
+{
+
+        MYSQL *con = mysql_init(NULL);
+
+        if (con == NULL)
+        {
+                fprintf(stderr, "%s\n", mysql_error(con));
+                exit(1);
+        }
+
+        if (mysql_real_connect(con, "localhost", "pi", "pwd", "water_db", 0, NULL, 0) == NULL)
+        {
+                finish_with_error(con);
+        }
+
+       int a = 120;
+                             
+        if (mysql_query(con, "INSERT INTO watermeter WALUES('',NOW(),'%d,a')",));
+          {
+          finish_with_error(con);
+          }
+
+        return 0;                                       //конец программы (типа того)
+}                                                       //конец main
+
+
