@@ -1,7 +1,7 @@
 #include <wiringPi.h> //библиотека для работы с GPIO. распиновка на 26: https://klenzel.de/wp-content/uploads/2014/09/wiringpi.jpg
 #include <stdio.h> // библиотека для вывода на экран
 
-#define ButtonPin 0 // это пин № 
+#define ButtonPin 0 // это пин № 17
 
 int main(void) //начало программы, зачем void - не знаю
 {
