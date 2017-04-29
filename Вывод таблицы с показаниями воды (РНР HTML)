@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>Водосчетчик Шевченко 49-134</title>
+<metahttp-equiv="Refresh"content="<?=$delay?>"/>
+</head>
+<body>
+<?php
+header("Content-Type: text/html; charset=utf-8");
+header('Refresh: 5; url=' .$_SERVER['PHP_SELF']);
+?>
+
+<?php
+    // определяем начальные данные11
+    $db_host = 'localhost';
+    $db_name = 'water_db';
+    $db_username = 'pi';
+    $db_password = 'Ural-_1983';
+    $db_table_to_show = 'watermeter';
+
+    // соединяемся с сервером базы данных
+    $connect_to_db = mysql_connect($db_host, $db_username, $db_password)
+    or die("Could not connect: " . mysql_error());
+
+    // подключаемся к базе данных
+    mysql_select_db($db_name, $connect_to_db)
+    or die("Could not select DB: " . mysql_error());
+
+	// исправляем проблему кодировки
+	mysql_query('SET NAMES utf8');
+
+    // выбираем все значения из таблицы multiperekluchatel
+    $qr_result = mysql_query("select * from watermeter ORDER BY id DESC")
+    or die(mysql_error());
+
+    // выводим на страницу сайта заголовки HTML-таблицы
+  echo '<table border="1">';
+  echo '<thead>';
+  echo '<tr>';
+  echo '<th>№</th>';
+  echo '<th> Дата и время (Год-месяц-день) </th>';
+  echo '<th> Значение (м3) </th>';
+  echo '</tr>';
+  echo '</thead>';
+  echo '<tbody>';
+
+   // выводим в HTML-таблицу данные из MySQL таблицы
+  while($data = mysql_fetch_array($qr_result)){
+    echo '<tr>';
+    echo '<td>' . $data['id'] . '</td>';
+    echo '<td>' . $data['datetime'] . '</td>';
+    echo '<td>' . $data['valuef'] . '</td>';
+    echo '</tr>';
+  }
+
+
+    echo '</tbody>';
+  echo '</table>';
+
+    // закрываем соединение с сервером  базы данных
+    mysql_close($connect_to_db);
+?>
+
+</body>
+</html>
