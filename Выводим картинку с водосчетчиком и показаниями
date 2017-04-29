@@ -1,0 +1,67 @@
+<?php
+header('Refresh: 5; url=' .$_SERVER['PHP_SELF']);
+function writeTextOnImage($filename, $text)
+{
+    $size_img = getimagesize($filename);
+    if ($size_img[2]==2)       $src_img = imagecreatefromjpeg($filename);
+    else if ($size_img[2]==1)  $src_img = imagecreatefromgif($filename);
+    else if ($size_img[2]==3)  $src_img = imagecreatefrompng($filename); 
+    // устанавливаем цвет нашей надписи и прозрачность (тут он будет черный и полностью прозрачный)
+    $color = imagecolorallocatealpha($src_img, 0, 0, 0, 0);
+    $font_file = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf";  // шрифт, которым пишем надпись (будьте внимательны с путем к шрифту)
+    $img_x = imagesx($src_img);
+    $img_y = imagesy($src_img);
+    $height_font = 23; // размер шрифта
+    $angle = 0;  // наклон надписи
+
+    // Запись текста поверх изображениe
+    $box = imagettftext($src_img, $height_font, $angle, $img_x - 283, $img_y - 335, $color, $font_file, $text); 
+
+    // Вывод изображения в браузер
+    if ($size_img[2]==2)
+    {
+        header ("Content-type: image/jpeg");
+        imagejpeg($src_img);
+    }
+    else if ($size_img[2]==1)
+    {
+        header ("Content-type: image/gif");
+        imagegif($src_img);
+    }
+    else if ($size_img[2]==3)
+    {
+        header ("Content-type: image/png");
+        imagepng($src_img);
+    }
+    return true;
+}
+
+    // определяем начальные данные
+    $db_host = 'localhost';
+    $db_name = 'water_db';
+    $db_username = 'pi';
+    $db_password = 'Ural-_1983';
+    $db_table_to_show = 'watermeter';
+
+    // соединяемся с сервером базы данных
+    $connect_to_db = mysql_connect($db_host, $db_username, $db_password)
+    or die("Could not connect: " . mysql_error());
+
+    // подключаемся к базе данных
+    mysql_select_db($db_name, $connect_to_db)
+    or die("Could not select DB: " . mysql_error());
+
+	// исправляем проблему кодировки
+	mysql_query('SET NAMES utf8');
+
+    // выбираем все значения из таблицы multiperekluchatel
+    $rt = mysql_query("select round (valuef, 3) from watermeter ORDER BY id DESC LIMIT 1") or die(mysql_error());
+    $row = mysql_fetch_row($rt);
+    if($row)
+
+$img = 'pic/watermeter.jpg'; // путь к изображению
+writeTextOnImage($img, $row[0]);  // тут "SnipCode.ru" - это наш текст, который 
+
+    // закрываем соединение с сервером  базы данных
+    mysql_close($connect_to_db);
+?>
