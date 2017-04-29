@@ -1,0 +1,64 @@
+<?php
+header('url=' .$_SERVER['PHP_SELF']);
+
+    // определяем начальные данные
+    $db_host = 'localhost';
+    $db_name = 'water_db';
+    $db_username = 'Username';
+    $db_password = 'Password';
+    $db_table_to_show = 'watermeter';
+
+    // соединяемся с сервером базы данных
+    $connect_to_db = mysql_connect($db_host, $db_username, $db_password)
+    or die("Could not connect: " . mysql_error());
+
+    // подключаемся к базе данных
+    mysql_select_db($db_name, $connect_to_db)
+    or die("Could not select DB: " . mysql_error());
+
+    // исправляем проблему кодировки
+	mysql_query('SET NAMES utf8');
+
+    // выбираем все значения из таблицы multiperekluchatel
+    $rt = mysql_query("select round (valuef, 0) from watermeter ORDER BY id DESC LIMIT 1") or die(mysql_error());
+    $row = mysql_fetch_row($rt);
+    if($row)
+
+
+
+
+// подключаем класс из файла
+require_once "SendMailSmtpClass.php"; // подключаем класс
+
+// $mailSMTP = new SendMailSmtpClass('логин', 'пароль', 'хост', 'имя отправителя', № порта);
+$mailSMTP = new SendMailSmtpClass('mail@yandex.ru', 'password', 'ssl://smtp.yandex.ru', 'mr. jones', 465);
+
+  
+// заголовок письма
+$headers= "MIME-Version: 1.0\r\n";
+$headers .= "Content-type: text/html; charset=utf-8\r\n"; // кодировка письма
+$headers .= "From: mr. jones <mail@yandex.ru>\r\n"; // от кого письмо
+
+//тело письма
+$body = 'Добрый день!<br>Показания водосчетчика в квартире № 000 по ул. Ленина 1: <b>'.$row[0].' м3</b><br><br>Сообщение отправлено автоматически с помощью системы автоматической передачи показаний водосчетчика.<br>Пожалуйста, не отвечайте на данное письмо.<br> E-mail для связи: mail@yandex.ru<br>';
+
+//тема письма
+$theme = 'Ленина 1 вода: '.$row[0].' м3';
+
+//шлем письмо на адрес
+$result =  $mailSMTP->send('mail@mail.ru', $theme, $body, $headers); // отправляем письмо
+// $result =  $mailSMTP->send('Кому письмо', 'Тема письма', 'Текст письма', 'Заголовки письма');
+
+if($result === true){
+// для откладки   echo "Письмо успешно отправлено";
+// для откладки   echo $body;
+}else{
+    echo "Письмо не отправлено. Ошибка: " . $result; //ошибка
+}
+
+
+
+
+    // закрываем соединение с сервером  базы данных
+    mysql_close($connect_to_db);
+?>
