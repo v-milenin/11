@@ -1,3 +1,4 @@
+// компилируем gcc -I/usr/include/mysql -L/usr/lib/mysql 2.c -o w -lz -lmysqlclient -lwiringPi
 #include <wiringPi.h> //библиотека для работы с GPIO. распиновка на 26: https://klenzel.de/wp-content/uploads/2014/09/wiringpi.jpg
 #include <stdio.h> // библиотека для вывода на экран
 #include <my_global.h> // библиотека для работы с sql
