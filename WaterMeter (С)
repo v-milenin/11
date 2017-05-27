@@ -113,7 +113,7 @@ int main(int argc, char **argv) //начало программы, зачем ar
 							finish_with_error(con);
 							}
 						
-						//mysql_free_result(res);
+						mysql_free_result(res);
 						//mysql_close(con); // Закрываем соединение
 
 
@@ -123,6 +123,6 @@ int main(int argc, char **argv) //начало программы, зачем ar
 				delay(1000);                            //задержка в 1 секунду. Говорят, что за секунду 5 литров не выльется
 
 	      }                                               //конец цикла
-
+	mysql_close(con); // Закрываем соединение
         return 0;                                       //конец программы (типа того)
 }                                                       //конец main
